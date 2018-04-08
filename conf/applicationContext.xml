@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+	default-lazy-init="true">
+
+	<context:component-scan base-package="com.cloudlinkin.classu" />
+	<context:annotation-config />
+	<!-- true:CGLib , fasle:jdk -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<bean id="schedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+	<bean id="propertyPlaceHolderConfigurer"
+		class="com.cloudlinkin.classu.annotations.impl.ExtendedPropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- mongodb config DAO&Service -->
+	<bean id="mongoClient" class="com.cloudlinkin.classu.mongo.MongoClientFactoryBean">
+		<property name="host" value="${mongodb_host}" />
+		<property name="port" value="${mongodb_port}" />
+	</bean>
+
+	<bean id="morphia" class="com.cloudlinkin.classu.mongo.MorphiaFactoryBean">
+		<property name="packgeScanName" value="com.cloudlinkin.classu" />
+	</bean>
+
+	<bean id="dataStore" class="com.cloudlinkin.classu.mongo.DatastoreFactoryBean">
+		<property name="mongoClient" ref="mongoClient" />
+		<property name="morphia" ref="morphia" />
+		<property name="dbName" value="${mongodb_dbname}" />
+	</bean>
+
+	<import resource="jedis.xml" />
+</beans>

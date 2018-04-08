@@ -1,0 +1,14 @@
+#!/bin/sh
+
+DIRNAME=`dirname $0`
+
+# Setup CLASSU_HOME
+if [ "x$CLASSU_HOME" = "x" ];
+then
+    # get the full path (without any relative bits)
+    CLASSU_HOME=`cd $DIRNAME;cd ..;cd ..;pwd`
+fi
+
+
+exec $CLASSU_HOME/bin/startup.sh
+

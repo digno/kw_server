@@ -1,0 +1,91 @@
+#!/bin/sh
+
+DIRNAME=`dirname $0`
+# Setup CLASSU_HOME
+if [ "x$CLASSU_HOME" = "x" ];
+then
+    # get the full path (without any relative bits)
+    CLASSU_HOME=`cd $DIRNAME;pwd`
+fi
+
+JAVA_HOME=/usr/java/jdk1.6.0_18
+
+PATH=$CLASSU_HOME/command:$PATH
+
+
+# check classu-server service 
+ 
+if test -d $CLASSU_HOME/service
+then
+    #echo "classu-server supervise directory [$CLASSU_HOME/service] exist"
+    echo 
+else
+    echo "classu-server  supervise directory [$CLASSU_HOME/service] not exist!"
+    exit 0
+fi
+
+
+
+case "$1"  in
+
+start)
+  
+    if [ -z `ps ax | grep ClassuServer | grep -v grep | awk '{print $1}' | xargs -l1` ] 
+    then
+
+            echo "starting ClassuServer ..."
+            $CLASSU_HOME/command/svscan $CLASSU_HOME/service &
+    else
+            echo "ClassuServer has already started."
+    fi
+
+    echo "done"
+    ;; 
+
+stop)
+
+#check if service has been started 
+    
+    
+    #
+    #   stop all service monitors
+    #
+            
+    $CLASSU_HOME/command/svc -d $CLASSU_HOME/service/classu-server
+
+ 	SVID=`ps ax | grep 'svscan '$CLASSU_HOME'/service' | grep -v grep | awk '{print $1}' | xargs -l1`
+    #echo "svscan uid " $SVID
+    if [ ! -z "$SVID" ]
+      then
+        kill -9 "$SVID"
+        echo "svcan stoped."
+    fi
+    
+    SUID=`ps ax | grep 'supervise classu-server' | grep -v grep | awk '{print $1}' | xargs -l1`
+    if [ ! -z "$SUID" ]
+     then
+       kill -9 $SUID
+       echo "supervise stop."
+    fi
+
+
+    RESULT=`ps ax | grep ClassuServer | grep -v grep | awk '{print $1}' | xargs -l1`
+    #echo "result=[$RESULT]"
+    if [ ! -z "$RESULT" ]
+    then
+    	#   stop all running service programs
+      	echo "stopping ClassuServer ..."
+        ps ax | grep ClassuServer | grep -v grep | awk '{print $1}' | xargs -l1 kill 
+        echo "ClassuServer stoped."
+     else
+            echo "no started process found ."
+     fi
+            
+     echo "done"
+     ;;
+*)
+    echo "command is not supported"
+    exit 1
+    ;;
+
+esac
