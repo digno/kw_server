@@ -255,7 +255,7 @@
 
 
 	<build>
-		<finalName>classu-server</finalName>
+		<finalName>kw-server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
