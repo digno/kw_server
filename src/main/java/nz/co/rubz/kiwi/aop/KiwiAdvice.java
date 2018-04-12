@@ -18,7 +18,7 @@ public class KiwiAdvice {
 	private Logger log  = Logger.getLogger(KiwiAdvice.class);
 
 	
-	@Around("@annotation(com.cloudlinkin.classu.ClassuBiz)")
+	@Around("@annotation(nz.co.rubz.kiwi.KiwiBiz)")
 	public Object processException(ProceedingJoinPoint joinPoint){
 		Object result= null;
 		try {

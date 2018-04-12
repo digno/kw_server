@@ -281,6 +281,8 @@ public class JedisOperator {
 		Jedis jedis = null;
 		try {
 			jedis = pool.getResource();
+			log.info(RedisKeyConstant.USER + userId
+					+ RedisKeyConstant.VERIFY_CODE_SUFFIX);
 			return jedis.get(RedisKeyConstant.USER + userId
 					+ RedisKeyConstant.VERIFY_CODE_SUFFIX);
 		} catch (Exception e) {

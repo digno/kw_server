@@ -113,7 +113,7 @@ public class WebSocketClient {
 
             System.out.println("WebSocket Client sending message");
             
-//            ch.writeAndFlush(new TextWebSocketFrame(genRegMessage()));
+            ch.writeAndFlush(new TextWebSocketFrame(genRegMessage()));
 //            ch.writeAndFlush(new TextWebSocketFrame(genLoginMessage()));
 //            ch.writeAndFlush(new TextWebSocketFrame(genGetUserListMessage()));
 //            ch.writeAndFlush(new TextWebSocketFrame(genGetUserDetailMessage()));
@@ -124,7 +124,7 @@ public class WebSocketClient {
 //            ch.writeAndFlush(new TextWebSocketFrame(genListActivitiesMessage()));
 //            
 //            ch.writeAndFlush(new TextWebSocketFrame(genJoinActivitiesMessage()));
-            ch.writeAndFlush(new TextWebSocketFrame(genChatMessage()));
+//            ch.writeAndFlush(new TextWebSocketFrame(genChatMessage()));
             
             
             // Ping
@@ -160,14 +160,30 @@ public class WebSocketClient {
     	
     }
     
+ // GEN MSGS
+    private KiwiMessage genBasicMessage(String subject,String from,String to,String msgId){
+    	
+    	KiwiMessage message = new KiwiMessage();
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+    	message.setCreateDate(sdf.format(new Date()));
+    	message.setFrom(from);
+    	message.setMsg_id(msgId);
+    	message.setStatus("0");
+    	message.setSubject(subject);
+    	message.setTo(to);
+    	message.setVersion("1.0");
+    	return message;
+    	
+    }
+    
     // 用户登陆
     private String genLoginMessage(){
-    	KiwiMessage message = genBasicMessage("user", "13910766800", "server");
+    	KiwiMessage message = genBasicMessage("user", "13910766840", "server");
     	Content content = new Content();
     	content.setType("login");
     	HashMap<String,Object> map = new HashMap<String,Object>();
-    	map.put("mobile", "13910766800");
-    	map.put("password","1234");
+    	map.put("mobile", "13910766840");
+    	map.put("password","123456");
     	content.setData(map);
     	message.setContent(content);
     	
@@ -176,7 +192,7 @@ public class WebSocketClient {
     
     // 用户注册
     private String genRegMessage(){
-    	KiwiMessage message = genBasicMessage("user", "13910766842", "server");
+    	KiwiMessage message = genBasicMessage("user", "13910766800", "server","0");
     	Content content = new Content();
     	content.setType("register");
     	HashMap<String,Object> map = new HashMap<String,Object>();
@@ -185,6 +201,7 @@ public class WebSocketClient {
     	map.put("nickname", "");
     	map.put("sex", "MAN");
     	map.put("picture", "");
+    	map.put("verify_code", "10000");
     	content.setData(map);
     	message.setContent(content);
     	return ProtocolConverter.unmarshallMsg(message);

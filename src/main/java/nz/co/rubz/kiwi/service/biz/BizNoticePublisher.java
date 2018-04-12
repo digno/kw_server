@@ -22,6 +22,7 @@ import nz.co.rubz.kiwi.bean.Classu;
 import nz.co.rubz.kiwi.bean.ClassuMember;
 import nz.co.rubz.kiwi.bean.Client;
 import nz.co.rubz.kiwi.bean.Comment;
+import nz.co.rubz.kiwi.bean.Geometry;
 import nz.co.rubz.kiwi.bean.Notification;
 import nz.co.rubz.kiwi.bean.Parent;
 import nz.co.rubz.kiwi.bean.User;
@@ -271,6 +272,7 @@ public class BizNoticePublisher {
 		cam.setPayload(apnsHelper.buildApnsPayload(notiType, content,className));
 		applicationContext.publishEvent(new PushMsgEvent(cam));
 	}
+	
 	public void pubNotifyIppush(String notiType, String className,
 			String content, Set<String> deviceTokens) {
 		KiwiIPPushMessage cam = new KiwiIPPushMessage();
@@ -513,7 +515,10 @@ public class BizNoticePublisher {
 		applicationContext.publishEvent(new NoticeEvent(rebuildClassuNoticeMail(cnm)));
 	}
 	
-
+	public void pubGeoUpdateNotice(String did, String loc_type,Geometry geometry){
+		
+	}
+	
 	private KiwiNoticeMail rebuildClassuNoticeMail(KiwiNoticeMail cnm){
 		Set<String> recipients = cnm.getRecipients();
 		HashSet<String> androidTokens = new HashSet<>();

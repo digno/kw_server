@@ -9,14 +9,14 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
 	default-lazy-init="true">
 
-	<context:component-scan base-package="com.cloudlinkin.classu" />
+	<context:component-scan base-package="nz.co.rubz.kiwi" />
 	<context:annotation-config />
 	<!-- true:CGLib , fasle:jdk -->
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<bean id="schedulerFactoryBean"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
 	<bean id="propertyPlaceHolderConfigurer"
-		class="com.cloudlinkin.classu.annotations.impl.ExtendedPropertyPlaceholderConfigurer">
+		class="nz.co.rubz.kiwi.annotations.impl.ExtendedPropertyPlaceholderConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
@@ -28,16 +28,16 @@
 	</bean>
 
 	<!-- mongodb config DAO&Service -->
-	<bean id="mongoClient" class="com.cloudlinkin.classu.mongo.MongoClientFactoryBean">
+	<bean id="mongoClient" class="nz.co.rubz.kiwi.mongo.MongoClientFactoryBean">
 		<property name="host" value="${mongodb_host}" />
 		<property name="port" value="${mongodb_port}" />
 	</bean>
 
-	<bean id="morphia" class="com.cloudlinkin.classu.mongo.MorphiaFactoryBean">
-		<property name="packgeScanName" value="com.cloudlinkin.classu" />
+	<bean id="morphia" class="nz.co.rubz.kiwi.mongo.MorphiaFactoryBean">
+		<property name="packgeScanName" value="nz.co.rubz.kiwi" />
 	</bean>
 
-	<bean id="dataStore" class="com.cloudlinkin.classu.mongo.DatastoreFactoryBean">
+	<bean id="dataStore" class="nz.co.rubz.kiwi.mongo.DatastoreFactoryBean">
 		<property name="mongoClient" ref="mongoClient" />
 		<property name="morphia" ref="morphia" />
 		<property name="dbName" value="${mongodb_dbname}" />

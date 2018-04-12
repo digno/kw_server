@@ -5,9 +5,9 @@ public class RedisKeyConstant {
 	// key 类型
 	// d->Date S->Set i-int s->String  l->List SS->SortSet
 	
-	public static final String USER = "classu:user:"; 
+	public static final String USER = "kiwi:user:"; 
 
-	public static final String NOTI = "classu:notify:";
+	public static final String NOTI = "kiwi:notify:";
 	public static final String LOGOUT_SUFFIX = ":logouttime-d";
 	public static final String VIEWED_SUFFIX= ":viewed-S"; 
 	public static final String CONFIRM_SUFFIX= ":confirmed-S"; 

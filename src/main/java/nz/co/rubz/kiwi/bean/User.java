@@ -3,42 +3,35 @@ package nz.co.rubz.kiwi.bean;
 import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.utils.IndexDirection;
 
 @Entity(noClassnameStored = true)
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String name;
 
-	@Indexed(value=IndexDirection.ASC, name="idx_user_mobile", unique=true, dropDups=true)  
+	@Indexed(options = @IndexOptions(name = "idx_user_mobile", unique = true))
 	private String mobile;
 
-	
 	private String gender;
 
 	private String password;
-	
+
 	private String email;
-	
+
 	private Date ctime;
 
 	private String type;
-	
+
 	private String pushflag;
-	
+
 	private String smsflag;
-	
+
 	private String emailflag;
 
-	
 	public String getName() {
 		return name;
 	}
@@ -119,5 +112,4 @@ public class User extends BaseEntity{
 		this.email = email;
 	}
 
-	
 }

@@ -40,7 +40,6 @@ public class KiwiWebSocketServerInitializer extends
 		ChannelPipeline pipeline = ch.pipeline();
 		pipeline.addLast("codec-http", new HttpServerCodec());
 		pipeline.addLast("aggregator", new HttpObjectAggregator(65536));
-//		pipeline.addLast("where-message-coverter", new WhereMessageAggregator());
 		pipeline.addLast(
 				"handler",
 				InitEnvironment.getAppclicatContextInstance().getBean(

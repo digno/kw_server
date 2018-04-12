@@ -8,7 +8,7 @@
 		</layout>
 	</appender>
 	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="../logs/classu.log" />
+		<param name="File" value="../logs/kiwi.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} -[%p:%L] [%c] %m%n" />
@@ -16,7 +16,7 @@
 	</appender>
 	
 	<appender name="query" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="../logs/classu_query.log" />
+		<param name="File" value="../logs/kiwi_query.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss} - %m%n" />
@@ -28,7 +28,7 @@
 			<appender-ref ref="query" />
 	</logger>
 	<root >
-		<level value="warn" />
+		<level value="info" />
 		<appender-ref ref="console" />
 		<appender-ref ref="file" />
 	</root>
