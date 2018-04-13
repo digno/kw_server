@@ -9,6 +9,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Property;
 
 @Entity(noClassnameStored = true)
+@Deprecated
 public class Classu extends BaseEntity{
 	
 	/**

@@ -6,6 +6,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Property;
 
 @Entity(noClassnameStored=true)
+@Deprecated
 public class Child extends BaseEntity{
 
 	/**

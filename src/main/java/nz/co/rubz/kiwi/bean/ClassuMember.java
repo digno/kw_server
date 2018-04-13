@@ -6,6 +6,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 
 @Embedded
+@Deprecated
 public class ClassuMember implements Serializable {
 
 	/**

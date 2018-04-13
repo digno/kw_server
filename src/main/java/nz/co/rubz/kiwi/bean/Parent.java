@@ -5,6 +5,7 @@ import org.mongodb.morphia.annotations.Embedded;
 
 
 @Embedded
+@Deprecated
 public class Parent {
 	
 	

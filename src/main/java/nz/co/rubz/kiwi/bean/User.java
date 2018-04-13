@@ -7,6 +7,7 @@ import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 
 @Entity(noClassnameStored = true)
+@Deprecated
 public class User extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
