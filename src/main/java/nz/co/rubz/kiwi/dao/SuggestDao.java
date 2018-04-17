@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import nz.co.rubz.kiwi.bean.Suggest;
+import nz.co.rubz.kiwi.model.Suggest;
 
 @Repository
 public class SuggestDao extends BasicDAO<Suggest, Datastore> {

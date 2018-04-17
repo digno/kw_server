@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 import nz.co.rubz.kiwi.KiwiBiz;
 import nz.co.rubz.kiwi.MsgConstants;
-import nz.co.rubz.kiwi.bean.Client;
-import nz.co.rubz.kiwi.bean.Suggest;
 import nz.co.rubz.kiwi.dao.ClientDao;
 import nz.co.rubz.kiwi.dao.SuggestDao;
+import nz.co.rubz.kiwi.model.Client;
+import nz.co.rubz.kiwi.model.Suggest;
 import nz.co.rubz.kiwi.protocol.beans.Content;
 import nz.co.rubz.kiwi.protocol.converter.ResponseContentHelper;
 

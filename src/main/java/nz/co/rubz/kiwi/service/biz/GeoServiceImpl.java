@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import nz.co.rubz.kiwi.KiwiBiz;
 import nz.co.rubz.kiwi.MsgConstants;
-import nz.co.rubz.kiwi.bean.Geometry;
-import nz.co.rubz.kiwi.bean.Location;
 import nz.co.rubz.kiwi.dao.LocationDao;
+import nz.co.rubz.kiwi.model.Geometry;
+import nz.co.rubz.kiwi.model.Location;
 import nz.co.rubz.kiwi.protocol.beans.Content;
 import nz.co.rubz.kiwi.protocol.converter.ResponseContentHelper; 
 

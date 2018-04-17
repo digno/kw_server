@@ -8,6 +8,8 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Property;
 
+import nz.co.rubz.kiwi.model.BaseEntity;
+
 @Entity(noClassnameStored = true)
 @Deprecated
 public class Classu extends BaseEntity{

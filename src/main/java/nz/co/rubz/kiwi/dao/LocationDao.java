@@ -4,7 +4,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.dao.BasicDAO;
 import org.mongodb.morphia.query.Query;
 
-import nz.co.rubz.kiwi.bean.Location;
+import nz.co.rubz.kiwi.model.Location;
 
 public class LocationDao extends BasicDAO<Location, Datastore>  {
 
@@ -15,7 +15,7 @@ public class LocationDao extends BasicDAO<Location, Datastore>  {
 	}
 
 	public Location getMemberLocationByAid(String aid, String mobile) {
-		Query<Location> q = getDs().createQuery(Location.class).order("-utime")
+		Query<Location> q = getDatastore().createQuery(Location.class).order("-utime")
 				.filter("aid", aid).filter("mobile", mobile);
 		DaoLogHelper.logSimpleExplain(q);
 		return q.get();

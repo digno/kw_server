@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 /**
  * Base PUSH Message
- * 
- * @author Administrator
  *
  */
 public class PushMessage {

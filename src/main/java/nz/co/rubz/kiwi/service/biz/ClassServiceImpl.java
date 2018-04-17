@@ -31,6 +31,7 @@ import nz.co.rubz.kiwi.protocol.beans.Content;
 import nz.co.rubz.kiwi.protocol.converter.ResponseContentHelper;
 
 @Service
+@Deprecated
 public class ClassServiceImpl {
 
 	private Logger log = Logger.getLogger(ClassServiceImpl.class);

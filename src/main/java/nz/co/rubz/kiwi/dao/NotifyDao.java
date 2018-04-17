@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.QueryResults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class NotifyDao extends BasicDAO<Notification, Datastore> {
 	private int pageSize = 20;
 	
 	public boolean deleteNoti(String notiId) {
-		Query<Notification> q = getDs().createQuery(Notification.class);
+		Query<Notification> q = getDatastore().createQuery(Notification.class);
 		q.field("_id").equal(new ObjectId(notiId));
 		WriteResult results = deleteByQuery(q);
 		return results.getN() > 0 ? true : false;
@@ -42,23 +43,24 @@ public class NotifyDao extends BasicDAO<Notification, Datastore> {
 		// mongodb 查询的值必须是常量，未提供
 		// db.notify.find({comments.relay:this.comments.relay_to}) 的查询
 		// 取出comment时应该过滤，这个值不是所有的。
-		Query<Notification> q = getDs().createQuery(Notification.class);
+		FindOptions opts = new FindOptions();
+		if(offset >=0){
+			opts.skip(offset);
+			opts.limit(pageSize);
+		}
+		Query<Notification> q = getDatastore().createQuery(Notification.class);
 		q.field("class_id").equal(classId);
 		q.order("-ctime");
-		if(offset >=0){
-			q.offset(offset);
-			q.limit(pageSize);
-		}
 		QueryResults<Notification> result = find(q);
 		DaoLogHelper.logSimpleExplain(q);
-		return result.asList();
+		return result.asList(opts);
 	}
 	
 	public List<Notification> findNotisByClassId(String classId,int offset) {
 		// mongodb 查询的值必须是常量，未提供
 		// db.notify.find({comments.relay:this.comments.relay_to}) 的查询
 		// 取出comment时应该过滤，这个值不是所有的。
-		Query<Notification> q = getDs().createQuery(Notification.class);
+		Query<Notification> q = getDatastore().createQuery(Notification.class);
 		q.field("class_id").equal(new String[]{classId});
 		q.order("-ctime");
 		if(offset >=0){
@@ -73,7 +75,7 @@ public class NotifyDao extends BasicDAO<Notification, Datastore> {
 	
 
 	public Notification findNotiById(String notiId) {
-		Query<Notification> q = getDs().createQuery(Notification.class);
+		Query<Notification> q = getDatastore().createQuery(Notification.class);
 		q.field("_id").equal(new ObjectId(notiId));
 		QueryResults<Notification> result = find(q);
 		return CollectionUtils.isEmpty(result.asList()) ? null : result.get();
@@ -90,7 +92,7 @@ public class NotifyDao extends BasicDAO<Notification, Datastore> {
 		if (CollectionUtils.isEmpty(classIds)) {
 			return null;
 		}
-		Query<Notification> q = getDs().createQuery(Notification.class);
+		Query<Notification> q = getDatastore().createQuery(Notification.class);
 		q.field("class_id").in(classIds);
 		q.offset(offset);
 		q.limit(pageSize);

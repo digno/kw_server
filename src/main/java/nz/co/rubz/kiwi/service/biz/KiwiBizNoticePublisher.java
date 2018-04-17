@@ -40,9 +40,9 @@ import nz.co.rubz.kiwi.notify.NoticeConstants;
 import nz.co.rubz.kiwi.protocol.beans.Content;
 
 @Component
-public class BizNoticePublisher {
+public class KiwiBizNoticePublisher {
 
-	private static Logger log = Logger.getLogger(BizNoticePublisher.class);
+	private static Logger log = Logger.getLogger(KiwiBizNoticePublisher.class);
 	
 	private static ObjectMapper mapper = new ObjectMapper();
 	@Autowired

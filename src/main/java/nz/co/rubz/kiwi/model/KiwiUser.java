@@ -1,16 +1,17 @@
-package nz.co.rubz.kiwi.bean;
+package nz.co.rubz.kiwi.model;
 
 import java.util.Date;
+import java.util.List;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexed;
 
-import nz.co.rubz.kiwi.model.BaseEntity;
+import nz.co.rubz.kiwi.model.attrs.Address;
+import nz.co.rubz.kiwi.model.attrs.Creditcard;
 
 @Entity(noClassnameStored = true)
-@Deprecated
-public class User extends BaseEntity {
+public class KiwiUser extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,11 +30,13 @@ public class User extends BaseEntity {
 
 	private String type;
 
+	private String avatar;
+	
 	private String pushflag;
 
-	private String smsflag;
+	private List<Creditcard> creditcards;
 
-	private String emailflag;
+	private List<Address> addrs;
 
 	public String getName() {
 		return name;
@@ -67,6 +70,14 @@ public class User extends BaseEntity {
 		this.password = password;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Date getCtime() {
 		return ctime;
 	}
@@ -83,6 +94,30 @@ public class User extends BaseEntity {
 		this.type = type;
 	}
 
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public List<Creditcard> getCreditcards() {
+		return creditcards;
+	}
+
+	public void setCreditcards(List<Creditcard> creditcards) {
+		this.creditcards = creditcards;
+	}
+
+	public List<Address> getAddrs() {
+		return addrs;
+	}
+
+	public void setAddrs(List<Address> addrs) {
+		this.addrs = addrs;
+	}
+
 	public String getPushflag() {
 		return pushflag;
 	}
@@ -91,28 +126,6 @@ public class User extends BaseEntity {
 		this.pushflag = pushflag;
 	}
 
-	public String getSmsflag() {
-		return smsflag;
-	}
-
-	public void setSmsflag(String smsflag) {
-		this.smsflag = smsflag;
-	}
-
-	public String getEmailflag() {
-		return emailflag;
-	}
-
-	public void setEmailflag(String emailflag) {
-		this.emailflag = emailflag;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 
 }

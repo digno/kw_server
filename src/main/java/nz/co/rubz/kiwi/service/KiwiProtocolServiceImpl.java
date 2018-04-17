@@ -13,28 +13,33 @@ import org.springframework.stereotype.Service;
 
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import nz.co.rubz.kiwi.ConcurrentContext;
+import nz.co.rubz.kiwi.KiwiServiceKeyEnum;
 import nz.co.rubz.kiwi.MsgConstants;
 import nz.co.rubz.kiwi.ServerConstants;
-import nz.co.rubz.kiwi.ServiceKeyEnum;
 import nz.co.rubz.kiwi.annotations.Config;
-import nz.co.rubz.kiwi.protocol.beans.KiwiMessage;
 import nz.co.rubz.kiwi.protocol.beans.Content;
+import nz.co.rubz.kiwi.protocol.beans.KiwiMessage;
 import nz.co.rubz.kiwi.protocol.converter.ResponseContentHelper;
 import nz.co.rubz.kiwi.server.KiwiChannel;
-import nz.co.rubz.kiwi.service.biz.ClassServiceImpl;
+import nz.co.rubz.kiwi.service.biz.CartServiceImpl;
 import nz.co.rubz.kiwi.service.biz.ClientServiceImpl;
 import nz.co.rubz.kiwi.service.biz.CommentServiceImpl;
+import nz.co.rubz.kiwi.service.biz.DeliveryServiceImpl;
+import nz.co.rubz.kiwi.service.biz.FoodServiceImpl;
+import nz.co.rubz.kiwi.service.biz.KiwiUserServiceImpl;
+import nz.co.rubz.kiwi.service.biz.MenuServiceImpl;
 import nz.co.rubz.kiwi.service.biz.MessageServiceImpl;
 import nz.co.rubz.kiwi.service.biz.NotificationServiceImpl;
-import nz.co.rubz.kiwi.service.biz.ScheduleServiceImpl;
+import nz.co.rubz.kiwi.service.biz.OrderServiceImpl;
+import nz.co.rubz.kiwi.service.biz.PaymentServiceImpl;
+import nz.co.rubz.kiwi.service.biz.RestaurantServiceImpl;
 import nz.co.rubz.kiwi.service.biz.SystemServiceImpl;
-import nz.co.rubz.kiwi.service.biz.UserServiceImpl;
 
-//@Service
-public class ProtocolServiceImpl implements IProtocolService {
+@Service
+public class KiwiProtocolServiceImpl implements IProtocolService {
 
 	private static final Logger log = Logger
-			.getLogger(ProtocolServiceImpl.class);
+			.getLogger(KiwiProtocolServiceImpl.class);
 
 	private ConcurrentHashMap<String, KiwiChannel> channelsMap = ConcurrentContext
 			.getChannelMapInstance();
@@ -46,13 +51,32 @@ public class ProtocolServiceImpl implements IProtocolService {
 	private IBizService bizService;
 
 	@Autowired
-	private UserServiceImpl userService;
+	private KiwiUserServiceImpl kiwiUserService;
+	
+	@Autowired
+	private RestaurantServiceImpl restaurantService;
+	
+	@Autowired
+	private OrderServiceImpl orderService;
+	
+	@Autowired
+	private FoodServiceImpl foodService;
+	
+	@Autowired
+	private MenuServiceImpl menuService;
+	
+	@Autowired
+	private CartServiceImpl cartService;
+	
+	@Autowired
+	private DeliveryServiceImpl deliveryService;
+	
+	@Autowired
+	private PaymentServiceImpl payService;
 	
 	@Autowired
 	private ClientServiceImpl clientService;
-
-	@Autowired
-	private ClassServiceImpl classService;
+	
 	@Autowired
 	private SystemServiceImpl sysService;
 
@@ -65,8 +89,7 @@ public class ProtocolServiceImpl implements IProtocolService {
 	@Autowired
 	private CommentServiceImpl commentService;
 	
-	@Autowired
-	private ScheduleServiceImpl scheduleService;
+	
 	
 	// 假定，IO耗时占比50% 。理论将线程数设置为 cup个数*2 就可以将cpu利用率提至最高
 	@Config("max_sync_req_threads")
@@ -110,14 +133,29 @@ public class ProtocolServiceImpl implements IProtocolService {
 			return result;
 
 		}
-		ServiceKeyEnum mk = ServiceKeyEnum.getEnum(subject.toUpperCase());
+		KiwiServiceKeyEnum mk = KiwiServiceKeyEnum.getEnum(subject.toUpperCase());
 		Content requestContent = message.getContent();
 		switch (mk) {
 		case USER:
-			result = bizService.process(requestContent, userService);
+			result = bizService.process(requestContent, kiwiUserService);
 			break;
-		case CLASS:
-			result = bizService.process(requestContent, classService);
+		case RESTAURANT:
+			result = bizService.process(requestContent, restaurantService);
+			break;
+		case FOOD:
+			result = bizService.process(requestContent, foodService);
+			break;
+		case ORDER:
+			result = bizService.process(requestContent, orderService);
+			break;
+		case CART:
+			result = bizService.process(requestContent, cartService);
+			break;
+		case DELIVERY:
+			result = bizService.process(requestContent, deliveryService);
+			break;
+		case PAYMENT:
+			result = bizService.process(requestContent, payService);
 			break;
 		case NOTIFY:
 			result = bizService.process(requestContent, notifyService);
@@ -128,10 +166,6 @@ public class ProtocolServiceImpl implements IProtocolService {
 		case COMMENT:
 			result = bizService.process(requestContent, commentService);
 			break;
-		case SCHEDULE:
-			result = bizService.process(requestContent, scheduleService);
-			break;
-
 		case SYSTEM:
 			if (requestContent.getType() == null) {
 				requestContent.setType(MsgConstants.TIDE);

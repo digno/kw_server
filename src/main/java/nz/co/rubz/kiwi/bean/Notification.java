@@ -7,6 +7,9 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Property;
 
+import nz.co.rubz.kiwi.model.BaseEntity;
+import nz.co.rubz.kiwi.model.attrs.Attach;
+
 @Entity(noClassnameStored = true)
 @Deprecated
 public class Notification extends BaseEntity implements Cloneable {

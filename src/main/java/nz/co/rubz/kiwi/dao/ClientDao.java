@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import nz.co.rubz.kiwi.bean.Client;
+import nz.co.rubz.kiwi.model.Client;
 
 @Repository
 public class ClientDao extends BasicDAO<Client, Datastore> {

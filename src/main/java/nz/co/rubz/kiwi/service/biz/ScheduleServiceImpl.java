@@ -26,6 +26,7 @@ import nz.co.rubz.kiwi.utils.DateUtils;
 import nz.co.rubz.kiwi.utils.MyStringUtils;
 
 @Service
+@Deprecated
 public class ScheduleServiceImpl {
 
 	private Logger log = Logger.getLogger(ScheduleServiceImpl.class);

@@ -7,105 +7,32 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nz.co.rubz.kiwi.bean.Child;
-import nz.co.rubz.kiwi.bean.Classu;
-import nz.co.rubz.kiwi.bean.ClassuMember;
 import nz.co.rubz.kiwi.bean.Comment;
 import nz.co.rubz.kiwi.bean.Notification;
 import nz.co.rubz.kiwi.bean.User;
-import nz.co.rubz.kiwi.dao.ClassDao;
 import nz.co.rubz.kiwi.dao.CommentDao;
 import nz.co.rubz.kiwi.jedis.JedisOperator;
 import nz.co.rubz.kiwi.model.Client;
+import nz.co.rubz.kiwi.model.KiwiUser;
 import nz.co.rubz.kiwi.model.attrs.Attach;
 
 @Component
-@Deprecated
-public class ClassuDataWrapper {
+public class KiwiDataWrapper {
 
-	private Logger log = Logger.getLogger(ClassuDataWrapper.class);
+	private Logger log = Logger.getLogger(KiwiDataWrapper.class);
 
 	@Autowired
 	private CommentDao commentDao;
-
-	@Autowired
-	private ClassDao classDao;
 	
 	@Autowired
 	private JedisOperator jedis;
 
-	public HashMap<String, Object> convertClassuData(Classu classu) {
-		HashMap<String, Object> temp = new HashMap<String, Object>();
-		temp.put("class_id", classu.getClassId());
-		temp.put("class_name", classu.getClassName());
-		if (!StringUtils.isBlank(classu.getClassMail())) {
-			temp.put("class_mail", classu.getClassMail());
-		}
-		if (!StringUtils.isBlank(classu.getOwner())) {
-			temp.put("owner", classu.getOwner());
-		}
-		if (!StringUtils.isBlank(classu.getOwnerName())) {
-			temp.put("owner_name", classu.getOwnerName());
-
-		}
-		if (classu.getContent() != null) {
-			temp.put("content", classu.getContent());
-		}
-
-		if (classu.getMembers() != null) {
-			List<HashMap<String, Object>> members = new ArrayList<>();
-			for (ClassuMember cm : classu.getMembers()) {
-				HashMap<String, Object> t = new HashMap<>();
-				t.put("child_photo", cm.getChildPhoto());
-				t.put("child_id", cm.getChildId());
-				t.put("child_name", cm.getChildName());
-				t.put("user_id", cm.getUserId());
-				t.put("relation", cm.getRelation());
-				members.add(t);
-			}
-			temp.put("members", members);
-		}
-		if (classu.getCtime() != null) {
-			// temp.put("ctime", DateFormatUtils.format(classu.getCtime(),
-			// "yyyy-MM-dd hh:mm:ss"));
-			temp.put("ctime", classu.getCtime().getTime());
-		}
-
-		return temp;
-	}
-
-	public void boxClassData(Classu classu, HashMap<String, Object> contentMap) {
-		Object classId = contentMap.get("class_id");
-		Object className = contentMap.get("class_name");
-		Object classMail = contentMap.get("class_mail");
-		Object owner = contentMap.get("owner");
-		Object ownerName = contentMap.get("owner_name");
-		Object content = contentMap.get("content");
-		if (classId != null) {
-			classu.setClassId((String) classId);
-		}
-		if (className != null) {
-			classu.setClassName((String) className);
-		}
-		if (classMail != null) {
-			classu.setClassMail((String) classMail);
-		}
-		if (content != null) {
-			classu.setContent((String) content);
-		}
-
-		if (owner != null) {
-			classu.setOwner((String) owner);
-		}
-		if (ownerName != null) {
-			classu.setOwnerName((String) ownerName);
-		}
-	}
+	
 
 	public Comment boxCommentData(HashMap<String, Object> contentMap) {
 		Comment comment = new Comment();
@@ -207,54 +134,6 @@ public class ClassuDataWrapper {
 		return resultList;
 	}
 
-//	@Deprecated
-//	public List<Notification> boxNotificationDataToList(
-//			HashMap<String, Object> contentMap) throws Exception {
-//
-//		List<Notification> resultList = new ArrayList<>();
-//		Notification noti = new Notification();
-//		String classId = (String) contentMap.get("class_id");
-//		String className = (String) contentMap.get("class_name");
-//		String owner = (String) contentMap.get("owner");
-//		String ownerName = (String) contentMap.get("owner_name");
-//		String content = (String) contentMap.get("content");
-//		Object attaches = contentMap.get("attaches");
-//		Object targets = contentMap.get("targets");
-//		noti.setContent(content);
-//		noti.setOwner(owner);
-//		noti.setClassName(className);
-//		noti.setOwnerName(ownerName);
-//		noti.setCtime(new Date());
-//		if (targets != null) {
-//			noti.setTargets((List<String>) targets);
-//		}
-//		List<Attach> attachList = new ArrayList<Attach>();
-//		if (attaches != null) {
-//			List<HashMap<String, Object>> attList = (List<HashMap<String, Object>>) attaches;
-//			for (HashMap<String, Object> a : attList) {
-//				Attach attach = new Attach();
-//				attach.setAttachType((String) a.get("attach_type"));
-//				attach.setAttachUrl((String) a.get("attach_url"));
-//				attachList.add(attach);
-//			}
-//			noti.setAttaches(attachList);
-//		}
-//		StringTokenizer st = new StringTokenizer(classId, ",");
-//		while (st.hasMoreTokens()) {
-//			String singleClassId = st.nextToken();
-//			Classu classu = classDao.findClassNameOwnerById(singleClassId);
-//			// 如果没有这个班级，则发布失败，如果此班级的owner与上传的owner不符则发布失败
-//			if (classu == null || !owner.equals(classu.getOwner())) {
-//				continue;
-//			}
-//			Notification cloneNoti = (Notification) noti.clone(); // 浅层复制，attachList//
-//																	// 为同一个。
-//			cloneNoti.setClassId(singleClassId);
-//			cloneNoti.setClassName(classu.getClassName());
-//			resultList.add(cloneNoti);
-//		}
-//		return resultList;
-//	}
 	
 	public Notification boxNotificationData(
 			HashMap<String, Object> contentMap) throws Exception {
@@ -447,31 +326,27 @@ public class ClassuDataWrapper {
 		return temp;
 	}
 
-	public HashMap<String, Object> convertUserData(User user) {
+	public HashMap<String, Object> convertUserData(KiwiUser user) {
 		HashMap<String, Object> temp = new HashMap<String, Object>();
 		temp.put("name", user.getName());
 		temp.put("mobile", user.getMobile());
 		temp.put("type", user.getType());
 		if (user.getCtime() != null) {
 			temp.put("ctime", user.getCtime());
-//			DateFormatUtils.format(user.getCtime(),"yyyy-MM-dd hh:mm:ss"));
 		}
 		temp.put("gender", String.valueOf(user.getGender()));
 		temp.put("email", StringUtils.isBlank(user.getEmail())?"":user.getEmail());
 		temp.put("pushflag", user.getPushflag());
-		temp.put("smsflag", user.getSmsflag());
-		temp.put("emailflag", user.getEmailflag());
 		temp.put("user_id", user.getId().toHexString());
 		return temp;
 	}
 
-	public User boxUserData(HashMap<String, Object> params) {
-		User user = new User();
+	public KiwiUser boxUserData(HashMap<String, Object> params) {
+		KiwiUser user = new KiwiUser();
 		String mobile = (String) params.get("mobile");
 		String name = (String) params.get("name");
 		String pushflag = (String) params.get("pushflag");
-		String smsflag = (String) params.get("smsflag");
-		String emailflag = (String) params.get("emailflag");
+		
 		String gender = (String) params.get("gender");
 		String password = (String) params.get("password");
 		String type = (String) params.get("type");
@@ -495,12 +370,7 @@ public class ClassuDataWrapper {
 		if (pushflag != null) {
 			user.setPushflag(pushflag);
 		}
-		if (smsflag != null) {
-			user.setSmsflag(smsflag);
-		}
-		if (emailflag != null) {
-			user.setEmailflag(emailflag);
-		}
+		
 		return user;
 	}
 

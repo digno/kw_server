@@ -21,31 +21,23 @@ import nz.co.rubz.kiwi.annotations.Config;
 import nz.co.rubz.kiwi.bean.Child;
 import nz.co.rubz.kiwi.bean.Classu;
 import nz.co.rubz.kiwi.bean.User;
-import nz.co.rubz.kiwi.dao.ChildDao;
-import nz.co.rubz.kiwi.dao.ClassDao;
-import nz.co.rubz.kiwi.dao.UserDao;
+import nz.co.rubz.kiwi.dao.KiwiUserDao;
 import nz.co.rubz.kiwi.jedis.JedisOperator;
+import nz.co.rubz.kiwi.model.KiwiUser;
 import nz.co.rubz.kiwi.protocol.beans.Content;
 import nz.co.rubz.kiwi.protocol.converter.ResponseContentHelper;
 import nz.co.rubz.kiwi.utils.HttpClientUtil;
 
 @Service
-@Deprecated
-public class UserServiceImpl {
+public class KiwiUserServiceImpl {
 
-	private Logger log = Logger.getLogger(UserServiceImpl.class);
-
+	private Logger log = Logger.getLogger(KiwiUserServiceImpl.class);
+	
 	@Autowired
-	private UserDao userDao;
-
+	private KiwiDataWrapper dataWrapper;
+	
 	@Autowired
-	private ClassDao classDao;
-
-	@Autowired
-	private ChildDao childDao;
-
-	@Autowired
-	private ClassuDataWrapper dataWrapper;
+	private KiwiUserDao userDao;
 	
 	@Autowired
 	private JedisOperator operator;
@@ -76,7 +68,7 @@ public class UserServiceImpl {
 
 		String mobile = (String) contentMap.get("mobile");
 		String pwd = (String) contentMap.get("password");
-		User existUser = userDao.findByMobile(mobile);
+		KiwiUser existUser = userDao.findByMobile(mobile);
 		if (existUser != null && !"".endsWith(existUser.getMobile())) {
 			if (existUser.getPassword().equals(pwd)) {
 				resultContent = new Content();
@@ -116,7 +108,7 @@ public class UserServiceImpl {
 			return ResponseContentHelper.genSimpleResponseContentWithoutType(
 					MsgConstants.ERROR_CODE_3, "verify code is not match.");
 		}
-		User saveUser = new User();
+		KiwiUser saveUser = new KiwiUser();
 		BeanUtils.populate(saveUser, contentMap);
 		if (userDao.exists("mobile", saveUser.getMobile())) {
 			resultContent = ResponseContentHelper
@@ -125,107 +117,19 @@ public class UserServiceImpl {
 							"user already registered!");
 		} else {
 			saveUser.setCtime(new Date());
-			saveUser.setPushflag("1");
-			saveUser.setEmailflag("0");
-			saveUser.setSmsflag("0");
-			Key<User> user = userDao.save(saveUser);
+			
+			Key<KiwiUser> user = userDao.save(saveUser);
 			
 			resultMap.put(MsgConstants.RESULT, MsgConstants.ERROR_CODE_0);
 			resultMap.put(MsgConstants.MSG, "user register successed!");
 			resultMap.put(MsgConstants.USERID, user.getId().toString());
 			resultContent.setData(resultMap);
-//			resultContent = ResponseContentHelper
-//					.genSimpleResponseContentWithoutType(
-//							MsgConstants.ERROR_CODE_0,
-//							"user register successed!");
 		}
 		return resultContent;
 	}
 
-	@KiwiBiz("joined_class")
-	@Deprecated
-	public Content findJoinedClass(HashMap<String, Object> contentMap)
-			throws Exception {
-		Content resultContent = new Content();
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		String userId = (String) contentMap.get("user_id");
-		if (StringUtils.isEmpty(userId)) {
-			return ResponseContentHelper.genSimpleResponseContentWithoutType(
-					MsgConstants.ERROR_CODE_3, "mobile is null.");
-		}
-		List<Classu> classes = classDao.findClassByMember(userId);
-		List<HashMap<String, Object>> returnList = new ArrayList<HashMap<String, Object>>();
-		for (Classu c : classes) {
-			HashMap<String, Object> r = new HashMap<String, Object>();
-			r.put("class_id", c.getClassId());
-			r.put("class_name", c.getClassName());
-			returnList.add(r);
-		}
-		// TODO 给家长发通知
-		resultMap.put(MsgConstants.RESULT, MsgConstants.ERROR_CODE_0);
-		resultMap.put(MsgConstants.CLASSES, returnList);
-		resultContent.setData(resultMap);
-		return resultContent;
-	}
+	
 
-	@KiwiBiz("my_kids")
-	public Content findMyKids(HashMap<String, Object> contentMap)
-			throws Exception {
-		Content resultContent = new Content();
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		String pid = (String) contentMap.get("user_id");
-		List<Child> children = childDao.findChildsByPid(pid);
-		List<HashMap<String, Object>> returnList = new ArrayList<HashMap<String, Object>>();
-		for (Child c : children) {
-			returnList.add(dataWrapper.convertChildData(c));
-		}
-		resultMap.put(MsgConstants.RESULT, MsgConstants.ERROR_CODE_0);
-		resultMap.put(MsgConstants.CHILDREN, returnList);
-		resultContent.setData(resultMap);
-		return resultContent;
-	}
-
-	@KiwiBiz("get_kid")
-	public Content getKidInfo(HashMap<String, Object> contentMap)
-			throws Exception {
-		Content resultContent = new Content();
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		String childName = (String) contentMap.get("child_name");
-		String pid = (String) contentMap.get("user_id");
-		Child child = childDao.findByChildNameAndParent(childName, pid);
-		resultMap.put(MsgConstants.RESULT, MsgConstants.ERROR_CODE_0);
-		resultMap.put(MsgConstants.CHILDREN, dataWrapper.convertChildData(child));
-		resultContent.setData(resultMap);
-		return resultContent;
-	}
-
-	@KiwiBiz("modify_child")
-	public Content modifyChildInfo(HashMap<String, Object> contentMap)
-			throws Exception {
-		Content resultContent = new Content();
-//		String mobile = (String) contentMap.get("mobile");
-		String childId = (String) contentMap.get("child_id");
-		String userId = (String) contentMap.get("user_id");
-		String childName = (String) contentMap.get("child_name");
-		String childPhoto = (String) contentMap.get("child_photo");
-
-
-		boolean result = childDao.modifyChildPhoto(childId, childPhoto,
-				childName);
-		if (result) {
-			resultContent = ResponseContentHelper
-					.genSimpleResponseContentWithoutType(
-							MsgConstants.ERROR_CODE_0, "modify " + childName
-									+ " successed.");
-			noticePublisher.pubModifyChildNotice(childId,userId);
-		} else {
-			resultContent = ResponseContentHelper
-					.genSimpleResponseContentWithoutType(
-							MsgConstants.ERROR_CODE_1, "modify " + childName
-									+ "  failed.");
-		}
-		return resultContent;
-	}
 
 
 
@@ -234,12 +138,11 @@ public class UserServiceImpl {
 			throws Exception {
 		Content resultContent = new Content();
 		String userId = (String) contentMap.get("user_id");
-		User existUser = userDao.findById(userId);
+		KiwiUser existUser = userDao.findById(userId);
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put(MsgConstants.RESULT, MsgConstants.ERROR_CODE_0);
 		resultMap.put("pushflag", existUser.getPushflag());
-		resultMap.put("smsflag", existUser.getSmsflag());
-		resultMap.put("emailflag", existUser.getEmailflag());
+		
 		resultContent.setData(resultMap);
 		return resultContent;
 	}
@@ -253,7 +156,7 @@ public class UserServiceImpl {
 		String smsflag = (String) contentMap.get("smsflag");
 		String emailflag = (String) contentMap.get("emailflag");
 		
-		User user = userDao.findById(userId);
+		KiwiUser user = userDao.findById(userId);
 		if (user ==null){
 			return ResponseContentHelper
 					.genSimpleResponseContentWithoutType(
@@ -261,8 +164,7 @@ public class UserServiceImpl {
 									+ " .");
 		}
 		user.setPushflag(pushflag);
-		user.setSmsflag(smsflag);
-		user.setEmailflag(emailflag);
+		
 		boolean result = userDao.updateUserById(userId, user);
 		if (result) {
 			resultContent = ResponseContentHelper
@@ -285,7 +187,7 @@ public class UserServiceImpl {
 		String userId = (String) contentMap.get("user_id");
 		String emailAddress = (String) contentMap.get("email");
 		
-		User user = userDao.findById(userId);
+		KiwiUser user = userDao.findById(userId);
 		if (user ==null){
 			return ResponseContentHelper
 					.genSimpleResponseContentWithoutType(
@@ -316,7 +218,7 @@ public class UserServiceImpl {
 		String userId = (String) contentMap.get("user_id");
 		String pwd = (String) contentMap.get("old_password");
 		String newPwd = (String) contentMap.get("new_password");
-		User existUser = userDao.findById(userId);
+		KiwiUser existUser = userDao.findById(userId);
 		if (existUser != null) {
 			if (existUser.getPassword().equals(pwd)) {
 				existUser.setPassword(newPwd);
@@ -350,7 +252,7 @@ public class UserServiceImpl {
 		String mobile = (String) contentMap.get("mobile");
 		String verifyCode = (String) contentMap.get("verify_code");
 		String newPwd = (String) contentMap.get("new_password");
-		User existUser = userDao.findByMobile(mobile);
+		KiwiUser existUser = userDao.findByMobile(mobile);
 		if (existUser != null) {
 			if (isCorrectVerifyCode(mobile, verifyCode)) {
 				existUser.setPassword(newPwd);
@@ -426,7 +328,7 @@ public class UserServiceImpl {
 		String userId = (String) contentMap.get("user_id");
 		String mobile = (String) contentMap.get("new_mobile");
 		String verifyCode = (String) contentMap.get("verify_code");
-		User user = userDao.findById(userId);
+		KiwiUser user = userDao.findById(userId);
 		if (user != null) {
 			if (isCorrectVerifyCode(mobile, verifyCode)) {
 				if (userDao.exists("mobile", mobile)){
@@ -441,7 +343,7 @@ public class UserServiceImpl {
 						.toHexString(), user);
 				if (result) {
 					// 给亲属和老师发通知
-					noticePublisher.pubModifyUserNotice(user.getId().toHexString());
+//					noticePublisher.pubModifyUserNotice(user.getId().toHexString());
 					resultContent = ResponseContentHelper
 							.genSimpleResponseContentWithoutType(
 									MsgConstants.ERROR_CODE_0, "modify user "
@@ -467,12 +369,12 @@ public class UserServiceImpl {
 	public Content modifyUser(HashMap<String, Object> contentMap)
 			throws Exception {
 		Content resultContent = new Content();
-		User user = dataWrapper.boxUserData(contentMap);
+		KiwiUser user = dataWrapper.boxUserData(contentMap);
 		String userId = (String) contentMap.get("user_id");
 		boolean result = userDao.updateUserById(userId, user);
 		if (result) {
 			// 给亲属和老师发通知
-			noticePublisher.pubModifyUserNotice(userId);
+//			noticePublisher.pubModifyUserNotice(userId);
 			resultContent = ResponseContentHelper
 					.genSimpleResponseContentWithoutType(
 							MsgConstants.ERROR_CODE_0,
@@ -492,7 +394,7 @@ public class UserServiceImpl {
 		Content resultContent = new Content();
 		String userId = (String) contentMap.get("user_id");
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		User user = userDao.findOne("_id",new ObjectId(userId));
+		KiwiUser user = userDao.findOne("_id",new ObjectId(userId));
 		user.setPassword("");//不能返回其他用户的密码
 		resultMap.put(MsgConstants.RESULT, MsgConstants.ERROR_CODE_0);
 		resultMap.put(MsgConstants.USER, user);
@@ -511,6 +413,4 @@ public class UserServiceImpl {
 		}
 	}
 	
-	
-
 }

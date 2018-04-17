@@ -5,6 +5,8 @@ import java.util.List;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Property;
 
+import nz.co.rubz.kiwi.model.BaseEntity;
+
 @Entity(noClassnameStored=true)
 @Deprecated
 public class Child extends BaseEntity{

@@ -1,7 +1,7 @@
 package nz.co.rubz.kiwi.service.biz;
 
 @Deprecated
-public class BizConstants {
+public class KiwiBizConstants {
 
 	
 	public static final String TEACHER_TYPE="1"; //1 老师，2 家长
