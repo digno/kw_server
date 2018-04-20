@@ -126,6 +126,13 @@ public class KiwiUser extends BaseEntity {
 		this.pushflag = pushflag;
 	}
 
+	@Override
+	public String toString() {
+		return "KiwiUser [name=" + name + ", mobile=" + mobile + ", gender=" + gender + ", password=" + password
+				+ ", email=" + email + ", ctime=" + ctime + ", type=" + type + ", avatar=" + avatar + ", pushflag="
+				+ pushflag + ", creditcards=" + creditcards + ", addrs=" + addrs + "]";
+	}
+
 	
 
 }
