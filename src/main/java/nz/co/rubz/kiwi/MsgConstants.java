@@ -30,8 +30,8 @@ public class MsgConstants {
 	public static final String PONG = "pong";
 	public static final String SYSTEM = "system";
 	public static final String TIDE = "tide";
-	public static final String ERROR_CODE_0 = "0";
-	public static final String ERROR_CODE_1 = "-1";
+	public static final String ERROR_CODE_0 = "0";	//未发生错误
+	public static final String ERROR_CODE_1 = "-1";	//请求参数错误
 	public static final String ERROR_CODE_2 = "-2";
 	public static final String ERROR_CODE_3 = "-3";
 	public static final String ERROR_CODE_4 = "-4";
@@ -48,6 +48,11 @@ public class MsgConstants {
 	public static final String STATUS = "0";
 	public static final String USERID = "user_id";
 	public static final String COMMENTID = "comment_id";
+	
+	public static final String ORDER = "order";	
+	public static final String ORDERID = "order_id";
+	public static final String ORDERSTATUS = "order_status";
+	
 	public static final String CLASSIDS = "class_ids";
 	public static final String VIEWS = "views";
 	

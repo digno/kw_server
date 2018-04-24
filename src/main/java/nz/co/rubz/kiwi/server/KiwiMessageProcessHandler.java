@@ -1,6 +1,7 @@
 package nz.co.rubz.kiwi.server;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -120,7 +121,7 @@ public class KiwiMessageProcessHandler extends
 		if (ServerConstants.SUBJECT_LOGIN.equalsIgnoreCase(message.getContent().getType())) {
 			String resultCode = (String) resultContent.getData().get("result");
 			if (Integer.valueOf(resultCode) == 0) {
-				HashMap<String,Object> loginData =  resultContent.getData();
+				Map<String,Object> loginData =  resultContent.getData();
 				HashMap<String,Object> loginedUser = (HashMap<String, Object>) loginData.get("user");
 				String userId = (String) loginedUser.get("user_id");
 				rcManager.mergeRiderChannels(userId, ctx.channel());

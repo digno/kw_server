@@ -1,12 +1,12 @@
 package nz.co.rubz.kiwi.protocol.beans;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class Content {
 
 	private String type;
 
-	private HashMap<String, Object> data;
+	private Map<String, Object> data;
 
 	public String getType() {
 		return type;
@@ -16,11 +16,11 @@ public class Content {
 		this.type = type;
 	}
 
-	public HashMap<String, Object> getData() {
+	public Map<String, Object> getData() {
 		return data;
 	}
 
-	public void setData(HashMap<String, Object> data) {
+	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
 

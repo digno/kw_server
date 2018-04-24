@@ -18,6 +18,13 @@ public enum OrderStatusEnum {
 			STATUS_CODE_UNPROCESSED, STATUS_CODE_PROCESSED_AND_VALID, STATUS_CODE_USER_CONFIRMED };
 
 	private OrderStatusEnum(int value) {
+		this.value = value;
+	}
+
+	private int value;
+
+	public int getValue() {
+		return value;
 	}
 
 	public static OrderStatusEnum[] getAllEnums() {

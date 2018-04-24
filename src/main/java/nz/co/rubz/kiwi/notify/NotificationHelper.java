@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -36,7 +37,7 @@ public class NotificationHelper {
 				message.setTo(to);
 				message.setSubject(mail.getNoticeType());
 				Content cont = mail.getContent();
-				HashMap<String, Object> data = cont.getData();
+				Map<String, Object> data = cont.getData();
 				data.put("ctime", new Date());
 				cont.setData(data);
 				message.setContent(cont);

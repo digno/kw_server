@@ -63,7 +63,7 @@ public final class KiwiWebSocketServerIndexPage {
                 '}' + NEWLINE +
                 "</script>" + NEWLINE +
                 "<form onsubmit=\"return false;\">" + NEWLINE +
-                "<input type=\"text\" name=\"message\" value=\"Hello, World!\"/>" +
+                "<textarea style=\"width:500px;height:300px;\" type=\"text\" name=\"message\" value=\"Hello, World!\"></textarea>" +
                 "<input type=\"button\" value=\"Send Web Socket Data\"" + NEWLINE +
                 "       onclick=\"send(this.form.message.value)\" />" + NEWLINE +
                 "<h3>Output</h3>" + NEWLINE +

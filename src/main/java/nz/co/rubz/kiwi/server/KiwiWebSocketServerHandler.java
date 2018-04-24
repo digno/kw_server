@@ -34,6 +34,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
@@ -186,6 +187,7 @@ public class KiwiWebSocketServerHandler extends SimpleChannelInboundHandler<Obje
 
 		// Send the response and close the connection if necessary.
 		ChannelFuture f = ctx.channel().write(res);
+		ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
 		if (!isKeepAlive(req) || res.getStatus().code() != 200) {
 			f.addListener(ChannelFutureListener.CLOSE);
 		}
